@@ -1,0 +1,8 @@
+bool relative
+bool rotation
+bool translation
+float64 orientation_theta
+float64 x
+float64 y
+---
+bool move_result

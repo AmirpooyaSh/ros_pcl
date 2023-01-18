@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UNL_Robotics>
+  <Facility_Plan>
+    <Facility_Plan_Default_Parameters>
+      <Default_max_vel_x>0.2</Default_max_vel_x>
+      <Default_max_vel_rot>1.0</Default_max_vel_rot>
+      <Default_num_inspection_rotations>2.0</Default_num_inspection_rotations>
+      <Default_rotation_direction>CCW</Default_rotation_direction>
+    </Facility_Plan_Default_Parameters>
+    <Facility_Description_File>
+      <Directory>facility</Directory>
+      <Filename>pki.facility.org</Filename>
+    </Facility_Description_File>
+    <Inspection_Route>
+      <Room_Routes>
+        <Room_Route>
+          <Area_ID>4</Area_ID>
+          <Location>Center</Location>
+          <Rotations>1</Rotations>
+        </Room_Route>
+        <Room_Route>
+          <Area_ID>3</Area_ID>
+          <Location>Center</Location>
+          <Rotations>1</Rotations>
+        </Room_Route>
+      </Room_Routes>
+    </Inspection_Route>
+  </Facility_Plan>
+</UNL_Robotics>

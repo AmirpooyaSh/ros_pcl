@@ -1,0 +1,15 @@
+
+Descriptions of the various Gazebo World files for PKI simulation
+
+
+The my_office_with_items.ORIG file is the original.  
+It includes the collision_map_creator line, as well as several people objects I didn't originally have in my .gazebo/model directory.
+
+| Suffix |                Similar to | Description                                                                                                      |
+|--------+---------------------------+------------------------------------------------------------------------------------------------------------------|
+|     01 | my_office_with_items.ORIG | The same structure as the .ORIG file but with all items commented out and the collision_map_creator line removed |
+|     02 |                        01 | Adding back in items and people                                                                                  |
+|     03 |                        02 | Add people to room 4 for testing                                                                                 |
+|    03b |                        03 | Moved people in room                                                                                             |
+|    03c |                        03 | Moved people in room                                                                                             |
+|        |                           |                                                                                                                  |

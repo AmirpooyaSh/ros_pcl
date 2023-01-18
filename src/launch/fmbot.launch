@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!-- Optional! Set the fmbot's image topic to something specific.
+       This will default (to: /camera/rgb/image_raw) if not set.
+       However, you may want to set this in the case of using the
+       top "head" camera of the Turtlebot.  For example:
+
+       roslaunch facility_management_robot fmbot.launch fmbot_image_topic:=/camera/rgb/image_raw
+       
+  -->
+  <arg name="fmbot_image_topic"  default="" />
+    
+  
+  <!--=== YOLO ===-->
+  <!--
+      1) Pass in the image topic we want Yolo to listen on, which is not
+          going to be the deafult camera/rgb/image_raw topic, since we want
+          to decide when to feed yolo a new image, allowing us to control
+          which image is processed.
+
+      2) Pass a "false" value for the enable_opencv argument to the
+          parameter server that will override the parameter being set in 
+          the ros.yaml file found in the  darknet_ros/config/  directory.
+          This will turn off the extra window showing the Yolo detection
+          view, which we don't need since it's part of our RViz UI.
+          But set this parameter *after* the <include> so that it
+          overrides the yaml file value.
+  -->
+  <include file="$(find darknet_ros)/launch/yolo_v3.launch">
+    <arg name="image" value="/camera/rgb/yolo" />
+  </include>
+
+  <param name="/darknet_ros/image_view/enable_opencv" type="bool" value="false" />
+  
+  <!--=== facility manager ===-->
+  <node pkg="pki_simulation" type="move_base" name="move_base_director" />
+  <node pkg="pki_simulation" type="inspection_bot" name="move_base" args="$(arg fmbot_image_topic)"/>
+  
+</launch>
+

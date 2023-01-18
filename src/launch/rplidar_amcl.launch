@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!--=== parameters ===-->
+  <arg name="rviz"      default="true"/>
+  <arg name="astra"     default="true"/>
+  <arg name="map_file"  default="$(find facility_management_robot)/maps/pureza.yaml"/>
+
+
+  <!--=== rplidar tf transform ===-->
+  
+  <!-- Provide a tf transform between the laser and the TB base_link.
+       This could be built into the robot's URDF, but if we're using the standard
+       Turtlebot URDF without modifications, then this link is necessary.
+       Mounting the LiDAR on the top platform is a transform of 0.4 m.
+
+       Also, this tf transforms the mounting direction of the LiDAR unit.
+       The power cable, by default, is in the x-direction. I have mounted it with
+       the power cable pointing towards the back. So I need a tf rotation for that too.
+  -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="laser_to_base_tf_broadcaster" args="0   0   0.28   3.14159   0   0   base_link laser" />       
+
+  
+  <!--=== rplidar node ===-->
+  <include file="$(find rplidar_ros)/launch/rplidar.launch" />
+
+  
+  <!--=== map_server ===-->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  
+  <!--=== AMCL ===-->
+  <arg name="custom_amcl_launch_file" default="$(find facility_management_robot)/launch/rplidar_amcl.launch.xml"/>
+  <arg name="initial_pose_x" default="1.0"/>
+  <arg name="initial_pose_y" default="-2.5"/>
+  <arg name="initial_pose_a" default="3.14159"/>
+  <include file="$(arg custom_amcl_launch_file)">
+    <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
+    <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
+    <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
+  </include>
+
+  
+  <!--=== move_base ===-->
+  <arg name="custom_param_file" default="$(find facility_management_robot)/launch/rplidar_costmap_params.yaml"/>
+  <include file="$(find turtlebot_navigation)/launch/includes/move_base.launch.xml">
+    <arg name="custom_param_file" value="$(arg custom_param_file)"/>
+  </include>
+
+  
+  <!-- === RViz support ===-->
+  <group if="$(arg rviz)">
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find facility_management_robot)/rviz/amcl_navigation.rviz"/>
+  </group>
+
+  
+  <!-- === astra camera ===-->
+  <group if="$(arg astra)">
+    <!--
+       This tf transforms the mounting point of the camera (28 cm high) and 
+       provides a frame for the camera to be used within a navigation session.
+     -->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="astra_to_base_tf_broadcaster" args="0.14   0   0.40   0   0  0  base_link camera_link" />  
+    <include file="$(find astra_launch)/launch/astra.launch"/>
+  </group>
+
+  
+</launch>
+
